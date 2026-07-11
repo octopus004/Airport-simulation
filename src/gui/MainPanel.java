@@ -44,8 +44,10 @@ public class MainPanel extends JFrame {
 		setSize(1200, 800);
 		setMinimumSize(new Dimension(900, 600));
 		
+
         
 		build();
+		airportpanel.setOnAirportAdded(() ->{ mappanel.refresh();});
 		setupInactivityTimer();
 		setupActivityTracking();
 		setVisible(true);
@@ -76,9 +78,9 @@ public class MainPanel extends JFrame {
 	}
 	private void build() {
 		setLayout(new BorderLayout(5, 5));
-		airportpanel = new AirportPanel(data);
 		flightpanel = new FlightPanel(data);
 		mappanel = new MapPanel(data,this);
+		airportpanel = new AirportPanel(data);
 		simpanel = new SimulationPanel(data,this,mappanel);
 		
 		 JToolBar toolbar = buildToolbar();
@@ -97,7 +99,6 @@ public class MainPanel extends JFrame {
 	     add(south, BorderLayout.SOUTH);
 	     
 	}
-	
 	
 
 	private void saveFile(String file) {

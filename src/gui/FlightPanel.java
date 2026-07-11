@@ -68,15 +68,18 @@ public class FlightPanel extends JPanel {
 	     private void addFlight() {
 		       String nameErr = Validate.validateFlightTime(xField.getText());
 		       if (nameErr != null) { showError(nameErr); return; }
-		       String Err = Validate.validateFlightTime(yField.getText());
-		       if (Err != null) { showError(Err); return; }
+		       
 		       String codeErr = Validate.validateFlightDuration(yField.getText());
 		       if (codeErr != null) { showError(codeErr); return; }
 		        
 
 		        String from = fromField.getText().trim().toUpperCase();
 		        String to = toField.getText().trim();
-		        int x = Integer.parseInt(xField.getText().trim());
+		        String[] parts = xField.getText().trim().split(":");
+		        int h = Integer.parseInt(parts[0].trim());
+	            int m = Integer.parseInt(parts[1].trim());
+	            int x= 60*h+m;
+	            System.out.println(x);
 		        int y = Integer.parseInt(yField.getText().trim());
 
 		        try {
@@ -84,8 +87,8 @@ public class FlightPanel extends JPanel {
 		        	Airport toAirport = null;
 		        
 		        	for(Airport a:data.getAirports()) {
-		        		if(a.getName().equals(from))  fromAirport = a;
-		        		if(a.getName().equals(to)) toAirport = a;
+		        		if(a.getCode().equalsIgnoreCase(from))  fromAirport = a;
+		        		if(a.getCode().equalsIgnoreCase(to)) toAirport = a;
 		        	}
 		        
 		            data.addFlight(new Flight(fromAirport, toAirport, x, y));

@@ -22,12 +22,15 @@ public class AirportPanel extends JPanel {
 	private Data data;
 	private JTextField codeField, nameField, xField, yField;
 	 private DefaultTableModel tableModel;
-	
+	private Runnable onAirportAdded;
+	 public void setOnAirportAdded(Runnable r) {
+		    onAirportAdded = r;
+		}
 	public AirportPanel(Data data) {
 		this.data = data;
 		setLayout(new BorderLayout(5, 5));
 	    setBorder(BorderFactory.createTitledBorder("Airports"));
-	
+	   
 
 	JPanel form = new JPanel(new GridBagLayout());
 	GridBagConstraints gbc = new GridBagConstraints();
@@ -84,11 +87,16 @@ public class AirportPanel extends JPanel {
 	        try {
 	            data.addAirport(new Airport(code, name, x, y));
 	            refreshTable();
+	            if (onAirportAdded != null) {
+	                onAirportAdded.run();
+	            }
 	          
+	            
 	        } catch (IllegalArgumentException ex) {
 	            showError(ex.getMessage());
 	        }
 	    }
+	
 	 private void showError(String msg) {
 	        JOptionPane.showMessageDialog(this, msg, "Error ", JOptionPane.WARNING_MESSAGE);
 

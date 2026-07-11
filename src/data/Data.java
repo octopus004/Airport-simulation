@@ -36,6 +36,20 @@ public class Data {
 		 return airports;
 		
 	 }
+	 public void block(Airport a, int min) {
+		 for(Airplane ap:airplanes) {
+			 if(ap.getFlight().getFrom().getName().equals(a.getName())) {
+				 if(!ap.isActive(min)) {} //ap.cancel();
+			 
+			 if(ap.getFlight().getTo().getName().equals(a.getName())) {
+				 if(!ap.isActive(min)) {} //ap.cancel();
+				 
+			 }
+		 
+	 }
+	  
+}
+		 }
 	 public void clearAirports() { 
 		 airports.clear(); 
      }

@@ -30,14 +30,14 @@ public class Validate {
             return "Departure time must not be empty.";
         String[] parts = time.trim().split(":");
         if (parts.length != 2)
-            return "Time has to be in format HH:MM.";
+            return "ATime has to be in format HH:MM.";
         try {
             int h = Integer.parseInt(parts[0].trim());
             int m = Integer.parseInt(parts[1].trim());
             if (h < 0 || h > 23) return "Hours have to be from 00 to 23.";
             if (m < 0 || m > 59) return "Minutes have to be from 00 to 59.";
         } catch (NumberFormatException e) {
-            return "Time has to be number in format HH:MM.";
+            return "STime has to be number in format HH:MM.";
         }
         return null;
     }
