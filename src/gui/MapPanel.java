@@ -22,7 +22,7 @@ import javax.swing.Timer;
 import data.Data;
 import model.Airplane;
 import model.Airport;
-import model.Flight;
+
 
 
 public class MapPanel extends JPanel {
@@ -32,7 +32,7 @@ public class MapPanel extends JPanel {
 	private Timer blinkTimer;
 	private boolean blinkOn = false;
 	private JPanel sidebar;
-	private List<JCheckBox> checkBoxes = new ArrayList<>();
+	//private List<JCheckBox> checkBoxes = new ArrayList<>();
 	private List<String> hidden = new ArrayList<>();
 	private Airport selected = null;
 	private Data data;
@@ -46,9 +46,11 @@ public class MapPanel extends JPanel {
 
 	        sidebar = new JPanel();
 	        sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
-	        sidebar.setPreferredSize(new Dimension(300, 0));
-	        
-	        add(new JScrollPane(sidebar), BorderLayout.EAST);
+	        JScrollPane scrollPane = new JScrollPane(sidebar);
+
+	        scrollPane.setPreferredSize(new Dimension(300, 600));
+	        	
+	        add(scrollPane, BorderLayout.EAST);
 
 	        blinkTimer = new Timer(500, e -> {
 	            blinkOn = !blinkOn;
@@ -74,7 +76,7 @@ public class MapPanel extends JPanel {
 	        	if (cb.isSelected()) {
 	                hidden.remove(a.getCode()); 
 	            } else {
-	                hidden.add(a.getCode()); a.change();
+	                hidden.add(a.getCode()); 
 	            }canvas.repaint();
 	        });
 
@@ -85,6 +87,7 @@ public class MapPanel extends JPanel {
 	    sidebar.repaint();
 	}
 	
+	
 	private List<Airplane> airplanes = new ArrayList<>();
     private int simMinutes = 0;
 
@@ -93,12 +96,9 @@ public class MapPanel extends JPanel {
         this.simMinutes = simMinutes;
         canvas.repaint();
     }
-   private  Airport sel = null;
-   private double startx,starty,endX,endY;
-   private boolean selecting = false;
-   boolean released = false;
-   boolean vis = false;
-   List<Airport>w = new ArrayList<>();
+  
+  
+  
 	private class MapCanvas extends JPanel{
 		public MapCanvas() {
 	    setBackground(Color.WHITE);
@@ -107,93 +107,12 @@ public class MapPanel extends JPanel {
 	    	
 		       @Override
 		       public void mouseClicked(MouseEvent e) {
-		    	   if(SwingUtilities.isRightMouseButton(e)) {
-		    		   handleRight(e.getX(), e.getY());
-		    	   }else {
-		    	   handleClick(e.getX(), e.getY());
-		        }
-		    	   }
-		       @Override
-		       public void mousePressed(MouseEvent e) {
-		    	   if(!SwingUtilities.isLeftMouseButton(e)) {
-		    		   return;
-		    	   }
-		    	   if(!released) {
-		    	   startx = e.getX();
-		    	   starty = e.getY();
-		    	   return;
-		    	   }
-		    	   
-		    	   for(Airport a:data.getAirports()) {
-		    		   int sx = toScreenX(a.getX());
-		    		   int sy = toScreenY(a.getY());
-		    		   if(Math.hypot(e.getX()-sx,e.getY()-sy)<8) {
-		    			   sel= a;
-		    			   return;
-		    		   }
-		    	   }
-		    	   
-		       }
-		      @Override
-		       public void mouseReleased(MouseEvent e) {
-		    	   released = true;
-		    	   System.out.println("wwwwwwwwwwww");
-		    	   System.out.println(starty);
-		    	   System.out.println(endY);
-		    	   
-		    	   for(Airport a :data.getAirports()) {
-		    		  System.out.println("sssssssssssssssss");
-		    		   int x = toScreenX(a.getX());
-		    		   int y = toScreenY(a.getY());
-		    		  System.out.println(y);
-		    		   if((x>startx&&x<endX)&&(y>starty&&y<endY)) {
-		    			   w.add(a);
-		    		   }
-		    	   }
 		    	  
+		    	   handleClick(e.getX(), e.getY());
+		        
 		       }
-		    });
-		     
-	    
-	    addMouseMotionListener(new MouseAdapter(){
-		       @Override
-		       public void mouseDragged(MouseEvent e) {
-		    	   
-		    	   endX = e.getX();
-		    	   endY = e.getY();
-		    	   selecting =true;
-		    	   vis = true;
-		    	   
-		    	   sel.setX(fromScreenX(e.getX()));
-		           sel.setY(fromScreenY(e.getY()));
-
-		           repaint();
+        });
 		       }
-		       
-		});
-		}
-	
-	    public void handleRight(int mx, int my) {
-	    	
-	    	int sz = 14;
-	    	 if(w.isEmpty()) System.out.println("aaaaaaaaaaa");
-		    for (Airport a : w) {
-System.out.println(a.getName());
-		        int x = toScreenX(a.getX());
-		        int y = toScreenY(a.getY());
-		        System.out.println(x);
-		        if(Math.hypot(mx-x,my-y)<8) {
-		        	hidden.add(a.getCode());
-		        	vis = false;
-		        	repaint();
-		        	return;
-		        }
-		        if (mx >= x - sz/2 && mx <= x + sz/2 && my >= y - sz/2 && my <= y + sz/2) {
-		        	//a.change();
-		        	
-		        }
-		        }
-	    }
 	
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -203,16 +122,16 @@ System.out.println(a.getName());
 	    drawAirports(g);
 	    drawAirplanes(g);
 	}
-	
+		       
 	
 	
 	private void drawAirplanes(Graphics g) {
 	    g.setColor(Color.BLUE);
 
 	    for (Airplane ap : airplanes) {
-	    	if(ap.getFlight().getFrom().is()||ap.getFlight().getTo().is()) continue;
 	    	 if (!ap.isActive(simMinutes))
-	            continue;
+		            continue;
+		        
 	        
 	        double p = ap.getProgress(simMinutes);
 
@@ -228,22 +147,7 @@ System.out.println(a.getName());
 	        g.fillOval(sx - 5, sy - 5, 10, 10);
 	    }
 	}
-	public void trecina() {
-		List<Airport> air = data.getAirports();
-		int len = air.size();
-		List<Airport> listamin = new ArrayList<>(); 
-		List<Airport> listamax = new ArrayList<>(); 
-
-		air.sort(Comparator.comparingInt(Airport::inn));
-		for(int i =0;i<len/3;i++) {
-			listamin.add(air.get(i));
-		}
-		air.reversed();
-		for(int i =0;i<len/3;i++) {
-			listamax.add(air.get(i));
-		}
-		
-		}
+	
 	
 	private void drawAirports(Graphics g) {
 		
@@ -256,11 +160,8 @@ System.out.println(a.getName());
 	        
 	        int sx = toScreenX(a.getX()), sy = toScreenY(a.getY());
             boolean isSel = a == selected;
-			if(a.is()) {
-				System.out.println(a.is());
-				g.setColor(Color.BLACK);
-			}
-			else  if (isSel && blinkOn) {
+			
+            if (isSel && blinkOn) {
             	
                 g.setColor(Color.RED);
             } else if (isSel) {
@@ -276,20 +177,10 @@ System.out.println(a.getName());
 	
 	        g.drawString(a.getCode(), x + 5, y);
 	        
-	        if(selecting) {
-	        	g.setColor(Color.BLUE);
-	        	if(vis)
-	        	
-	        	g.fillRect((int)startx, (int)starty, (int)Math.abs(startx-endX),(int)Math.abs(starty-endY));
-	        }
+	       
 	    }
 	}
-	private double fromScreenX(int x) {
-	    return (double)x / getWidth() * 360 - 180;
-	}
-	private double fromScreenY(int y) {
-	    return 90 - (double)y / getHeight() * 180;
-	}
+	
 	
 	private int toScreenX(double x) {
 	    return (int)((x + 180) / 360 * getWidth());
@@ -335,5 +226,6 @@ System.out.println(a.getName());
 	}
 	}
 
-}
+
+	}
 	

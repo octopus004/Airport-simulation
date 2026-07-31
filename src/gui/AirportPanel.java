@@ -21,9 +21,9 @@ public class AirportPanel extends JPanel {
 	
 	private Data data;
 	private JTextField codeField, nameField, xField, yField;
-	 private DefaultTableModel tableModel;
+	private DefaultTableModel tableModel;
 	private Runnable onAirportAdded;
-	 public void setOnAirportAdded(Runnable r) {
+	public void setOnAirportAdded(Runnable r) {
 		    onAirportAdded = r;
 		}
 	public AirportPanel(Data data) {
@@ -87,6 +87,7 @@ public class AirportPanel extends JPanel {
 	        try {
 	            data.addAirport(new Airport(code, name, x, y));
 	            refreshTable();
+	           
 	            if (onAirportAdded != null) {
 	                onAirportAdded.run();
 	            }

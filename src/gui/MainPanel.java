@@ -44,9 +44,10 @@ public class MainPanel extends JFrame {
 		setSize(1200, 800);
 		setMinimumSize(new Dimension(900, 600));
 		
-
+		
         
 		build();
+		
 		airportpanel.setOnAirportAdded(() ->{ mappanel.refresh();});
 		setupInactivityTimer();
 		setupActivityTracking();
@@ -203,5 +204,6 @@ public class MainPanel extends JFrame {
 	private void showError(String msg) {
         JOptionPane.showMessageDialog(this, msg, "Error", JOptionPane.ERROR_MESSAGE);
     }
+	
 	
 }

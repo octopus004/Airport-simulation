@@ -79,7 +79,7 @@ public class FlightPanel extends JPanel {
 		        int h = Integer.parseInt(parts[0].trim());
 	            int m = Integer.parseInt(parts[1].trim());
 	            int x= 60*h+m;
-	            System.out.println(x);
+	            
 		        int y = Integer.parseInt(yField.getText().trim());
 
 		        try {
